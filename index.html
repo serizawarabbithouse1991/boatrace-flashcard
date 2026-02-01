@@ -27,28 +27,64 @@
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
-    .category-selector {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 20px;
+    .filter-section {
+      background: rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 15px;
+      width: 100%;
+      max-width: 500px;
     }
 
-    .category-btn {
-      padding: 8px 16px;
+    .filter-label {
+      color: white;
+      font-size: 14px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .category-selector, .importance-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .category-btn, .importance-btn {
+      padding: 6px 14px;
       border: none;
       border-radius: 20px;
       background: rgba(255,255,255,0.2);
       color: white;
       cursor: pointer;
       transition: all 0.3s;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     .category-btn:hover, .category-btn.active {
       background: rgba(255,255,255,0.9);
       color: #1e3c72;
+    }
+
+    .importance-btn:hover, .importance-btn.active {
+      background: rgba(255,255,255,0.9);
+      color: #1e3c72;
+    }
+
+    .importance-btn[data-importance="high"].active {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .importance-btn[data-importance="medium"].active {
+      background: #ffd93d;
+      color: #333;
+    }
+
+    .importance-btn[data-importance="low"].active {
+      background: #6bcb77;
+      color: white;
     }
 
     .progress {
@@ -60,8 +96,8 @@
     .card-container {
       perspective: 1000px;
       width: 100%;
-      max-width: 400px;
-      height: 280px;
+      max-width: 420px;
+      height: 300px;
       margin-bottom: 20px;
     }
 
@@ -119,8 +155,33 @@
       font-size: 12px;
     }
 
+    .importance-tag {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .importance-tag.high {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .importance-tag.medium {
+      background: #ffd93d;
+      color: #333;
+    }
+
+    .importance-tag.low {
+      background: #6bcb77;
+      color: white;
+    }
+
     .definition {
-      font-size: 20px;
+      font-size: 18px;
       color: #333;
       text-align: center;
       line-height: 1.6;
@@ -185,7 +246,7 @@
       padding: 20px;
       margin-top: 20px;
       width: 100%;
-      max-width: 600px;
+      max-width: 700px;
     }
 
     .word-list h3 {
@@ -196,18 +257,21 @@
 
     .word-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 8px;
+      max-height: 400px;
+      overflow-y: auto;
     }
 
     .word-item {
       background: rgba(255,255,255,0.9);
-      padding: 8px 12px;
+      padding: 6px 10px;
       border-radius: 8px;
       text-align: center;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       transition: all 0.3s;
+      border-left: 4px solid transparent;
     }
 
     .word-item:hover {
@@ -218,19 +282,52 @@
     .word-item.learned {
       background: #90EE90;
     }
+
+    .word-item.high {
+      border-left-color: #ff6b6b;
+    }
+
+    .word-item.medium {
+      border-left-color: #ffd93d;
+    }
+
+    .word-item.low {
+      border-left-color: #6bcb77;
+    }
+
+    .stats {
+      color: white;
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
   <h1>🚤 ボートレース用語 単語帳</h1>
   
-  <div class="category-selector">
-    <button class="category-btn active" data-category="all">すべて</button>
-    <button class="category-btn" data-category="course">コース</button>
-    <button class="category-btn" data-category="start">スタート</button>
-    <button class="category-btn" data-category="technique">決まり手</button>
-    <button class="category-btn" data-category="player">選手</button>
-    <button class="category-btn" data-category="betting">舟券</button>
-    <button class="category-btn" data-category="other">その他</button>
+  <div class="filter-section">
+    <span class="filter-label">📁 カテゴリ</span>
+    <div class="category-selector">
+      <button class="category-btn active" data-category="all">すべて</button>
+      <button class="category-btn" data-category="course">コース</button>
+      <button class="category-btn" data-category="start">スタート</button>
+      <button class="category-btn" data-category="technique">決まり手</button>
+      <button class="category-btn" data-category="player">選手</button>
+      <button class="category-btn" data-category="betting">舟券</button>
+      <button class="category-btn" data-category="equipment">モーター・艇</button>
+      <button class="category-btn" data-category="race">レース</button>
+      <button class="category-btn" data-category="weather">天候・水面</button>
+      <button class="category-btn" data-category="other">その他</button>
+    </div>
+    
+    <span class="filter-label">⭐ 重要度</span>
+    <div class="importance-selector">
+      <button class="importance-btn active" data-importance="all">すべて</button>
+      <button class="importance-btn" data-importance="high">高（必須）</button>
+      <button class="importance-btn" data-importance="medium">中（重要）</button>
+      <button class="importance-btn" data-importance="low">低（応用）</button>
+    </div>
   </div>
 
   <div class="progress">
@@ -241,6 +338,7 @@
     <div class="card" id="card">
       <div class="card-face card-front">
         <span class="category-tag" id="categoryTag">カテゴリ</span>
+        <span class="importance-tag" id="importanceTag">重要度</span>
         <div class="term" id="term">用語</div>
         <span class="hint">クリックで意味を表示</span>
       </div>
@@ -263,76 +361,371 @@
   <div class="word-list">
     <h3>📚 用語一覧（クリックでジャンプ）</h3>
     <div class="word-grid" id="wordGrid"></div>
+    <div class="stats" id="stats"></div>
   </div>
 
   <script>
     const words = [
-      // コース・レース関連
-      { term: "ピット", definition: "選手がスタート前に待機する場所", category: "course" },
-      { term: "スタートライン", definition: "レース開始地点。ここを通過してレースが始まる", category: "course" },
-      { term: "1マーク", definition: "第1ターンマーク。最初のコーナーにあるブイ", category: "course" },
-      { term: "2マーク", definition: "第2ターンマーク。2番目のコーナーにあるブイ", category: "course" },
-      { term: "バックストレッチ", definition: "1マークと2マークの間の直線部分", category: "course" },
-      { term: "ホームストレッチ", definition: "スタンド前の直線部分", category: "course" },
-      { term: "水面", definition: "レースが行われる競走水面のこと", category: "course" },
+      // =====================================
+      // 重要度：高（必須）- 初心者が最初に覚えるべき基本用語
+      // =====================================
       
-      // スタート関連
-      { term: "フライングスタート方式", definition: "決められた時間内にスタートラインを通過する方式", category: "start" },
-      { term: "大時計", definition: "スタートタイミングを示す時計。0秒でスタート", category: "start" },
-      { term: "フライング（F）", definition: "スタート時刻より早く通過した違反。返還欠場", category: "start" },
-      { term: "出遅れ（L）", definition: "スタート時刻から1秒以上遅れた違反。返還欠場", category: "start" },
-      { term: "待機行動", definition: "ピットアウトからスタートまでの動き・駆け引き", category: "start" },
-      { term: "スタート展示", definition: "本番前に行うスタートの練習・公開", category: "start" },
-      { term: "コース取り", definition: "スタート前にどのコースを取るかの駆け引き", category: "start" },
-      { term: "スロースタート", definition: "助走距離を短くして内側から出るスタート", category: "start" },
-      { term: "ダッシュスタート", definition: "助走距離を長くして外側から勢いよく出るスタート", category: "start" },
+      // コース・レース関連 - 高
+      { term: "ピット", definition: "選手がスタート前に待機する場所。ここから発進してコース取りを行う", category: "course", importance: "high" },
+      { term: "スタートライン", definition: "レース開始地点。大時計が0秒を指した瞬間に通過するのが理想", category: "course", importance: "high" },
+      { term: "1マーク", definition: "第1ターンマーク。最初のコーナーで勝負が決まることが多い最重要ポイント", category: "course", importance: "high" },
+      { term: "2マーク", definition: "第2ターンマーク。バックストレッチ後のターンポイント", category: "course", importance: "high" },
+      { term: "コース", definition: "1〜6コースがあり、内側ほど有利。1コースの勝率は約55%", category: "course", importance: "high" },
+      { term: "インコース", definition: "1〜3コースの内側コース。スタートで有利だが技術が必要", category: "course", importance: "high" },
+      { term: "アウトコース", definition: "4〜6コースの外側コース。助走距離を取れるがターンで不利", category: "course", importance: "high" },
+      { term: "ホームストレッチ", definition: "スタンド前の直線部分。ゴールラインもここにある", category: "course", importance: "high" },
+      { term: "バックストレッチ", definition: "1マークと2マークの間の直線部分", category: "course", importance: "high" },
       
-      // 決まり手
-      { term: "逃げ", definition: "1コースの艇が先行してそのまま1着でゴール", category: "technique" },
-      { term: "差し", definition: "内側から他艇を追い抜いて勝つ決まり手", category: "technique" },
-      { term: "まくり", definition: "外側から一気に追い抜いて勝つ決まり手", category: "technique" },
-      { term: "まくり差し", definition: "まくりながら内側に切り込んで勝つ決まり手", category: "technique" },
-      { term: "抜き", definition: "2周目以降に追い抜いて勝つ決まり手", category: "technique" },
-      { term: "恵まれ", definition: "他艇のフライング・転覆などで繰り上がる決まり手", category: "technique" },
-      { term: "ツケマイ", definition: "内側の艇に接近してターンし、引き波で失速させる技", category: "technique" },
-      { term: "モンキーターン", definition: "艇の上に立ち上がって鋭くターンする技術", category: "technique" },
+      // スタート関連 - 高
+      { term: "フライングスタート方式", definition: "決められた時間内にスタートラインを通過する方式。陸上と違い静止状態から始まらない", category: "start", importance: "high" },
+      { term: "大時計", definition: "スタートタイミングを示す時計。12秒前から動き始め、0秒でスタート", category: "start", importance: "high" },
+      { term: "フライング（F）", definition: "スタート時刻より早く通過した違反。その選手は失格、舟券は返還", category: "start", importance: "high" },
+      { term: "出遅れ（L）", definition: "スタート時刻から1秒以上遅れた違反。失格扱いで舟券返還", category: "start", importance: "high" },
+      { term: "スタートタイミング（ST）", definition: "スタートラインを通過した時のタイム。0.00に近いほど良いスタート", category: "start", importance: "high" },
+      { term: "平均ST", definition: "選手のスタートタイミングの平均値。低いほどスタートが上手い", category: "start", importance: "high" },
+      { term: "待機行動", definition: "ピットアウトからスタートまでの動き。コース取りの駆け引きが行われる", category: "start", importance: "high" },
+      { term: "進入", definition: "スタート直前のコース位置取り。枠番通りとは限らない", category: "start", importance: "high" },
       
-      // 選手・階級関連
-      { term: "A1級", definition: "選手の最上位ランク。勝率上位者", category: "player" },
-      { term: "A2級", definition: "選手の2番目のランク", category: "player" },
-      { term: "B1級", definition: "選手の3番目のランク", category: "player" },
-      { term: "B2級", definition: "選手の最下位ランク。新人はここから", category: "player" },
-      { term: "勝率", definition: "選手の成績を示す数値。着順点÷出走数", category: "player" },
-      { term: "モーター", definition: "エンジンのこと。節ごとに抽選で決まる", category: "player" },
-      { term: "ボート（艇）", definition: "レースで使用する船。抽選で割り当て", category: "player" },
-      { term: "プロペラ", definition: "推進力を生むパーツ。選手が自分で調整可能", category: "player" },
+      // 決まり手 - 高
+      { term: "逃げ", definition: "1コースの艇が先行してそのまま1着でゴール。最も多い決まり手", category: "technique", importance: "high" },
+      { term: "差し", definition: "内側から他艇を追い抜いて勝つ決まり手。2〜4コースに多い", category: "technique", importance: "high" },
+      { term: "まくり", definition: "外側から一気に追い抜いて勝つ決まり手。スピードと技術が必要", category: "technique", importance: "high" },
+      { term: "まくり差し", definition: "外からまくりながら内側に切り込んで勝つ高度な技。4〜6コースで見られる", category: "technique", importance: "high" },
+      { term: "抜き", definition: "2周目以降のストレートやターンで追い抜いて勝つ決まり手", category: "technique", importance: "high" },
+      { term: "恵まれ", definition: "他艇のフライング・転覆・失格などで順位が繰り上がる決まり手", category: "technique", importance: "high" },
       
-      // 舟券関連
-      { term: "単勝", definition: "1着を当てる舟券", category: "betting" },
-      { term: "複勝", definition: "2着以内を当てる舟券", category: "betting" },
-      { term: "2連単", definition: "1着・2着を着順通りに当てる舟券", category: "betting" },
-      { term: "2連複", definition: "1着・2着を順不同で当てる舟券", category: "betting" },
-      { term: "3連単", definition: "1着・2着・3着を着順通りに当てる舟券", category: "betting" },
-      { term: "3連複", definition: "1着・2着・3着を順不同で当てる舟券", category: "betting" },
-      { term: "拡連複（ワイド）", definition: "3着以内の2艇を当てる舟券", category: "betting" },
-      { term: "オッズ", definition: "配当倍率。人気がないほど高くなる", category: "betting" },
-      { term: "本命", definition: "1番人気で勝つ可能性が高いとされる艇", category: "betting" },
-      { term: "穴", definition: "人気がないが高配当が期待できる艇", category: "betting" },
+      // 選手・階級関連 - 高
+      { term: "A1級", definition: "選手の最上位ランク。勝率上位約20%の選手。賞金も高い", category: "player", importance: "high" },
+      { term: "A2級", definition: "選手の2番目のランク。A1に次ぐ実力者", category: "player", importance: "high" },
+      { term: "B1級", definition: "選手の3番目のランク。中堅クラス", category: "player", importance: "high" },
+      { term: "B2級", definition: "選手の最下位ランク。新人や成績不振の選手", category: "player", importance: "high" },
+      { term: "勝率", definition: "選手の成績を示す数値。着順点の合計÷出走回数で計算", category: "player", importance: "high" },
+      { term: "2連対率", definition: "2着以内に入る確率。選手の安定感を示す重要指標", category: "player", importance: "high" },
+      { term: "3連対率", definition: "3着以内に入る確率。舟券に絡む可能性を示す", category: "player", importance: "high" },
       
-      // その他
-      { term: "イン屋", definition: "1コース（内側）を好む選手", category: "other" },
-      { term: "アウト屋", definition: "外側コースを好む選手", category: "other" },
-      { term: "周回展示", definition: "本番前に行うコース2周の試走", category: "other" },
-      { term: "チルト角度", definition: "モーターの取り付け角度。出足・伸びに影響", category: "other" },
-      { term: "ナイター", definition: "夜間開催のレース", category: "other" },
-      { term: "モーニング", definition: "朝から開催のレース", category: "other" },
-      { term: "SG", definition: "最高峰のグレードレース", category: "other" },
-      { term: "G1", definition: "SGに次ぐグレードレース", category: "other" },
-      { term: "一般戦", definition: "グレードなしの通常レース", category: "other" },
-      { term: "節", definition: "数日間にわたる開催単位", category: "other" },
-      { term: "斡旋", definition: "選手がレースに出場するよう割り当てられること", category: "other" },
-      { term: "転覆", definition: "艇がひっくり返ること", category: "other" },
-      { term: "落水", definition: "選手が艇から落ちること", category: "other" }
+      // 舟券関連 - 高
+      { term: "3連単", definition: "1着・2着・3着を着順通りに当てる舟券。120通りで高配当が狙える", category: "betting", importance: "high" },
+      { term: "3連複", definition: "1着・2着・3着を順不同で当てる舟券。20通り", category: "betting", importance: "high" },
+      { term: "2連単", definition: "1着・2着を着順通りに当てる舟券。30通り", category: "betting", importance: "high" },
+      { term: "2連複", definition: "1着・2着を順不同で当てる舟券。15通り", category: "betting", importance: "high" },
+      { term: "単勝", definition: "1着を当てる舟券。6通りで初心者向け", category: "betting", importance: "high" },
+      { term: "複勝", definition: "2着以内を当てる舟券。的中しやすいが配当は低め", category: "betting", importance: "high" },
+      { term: "拡連複（ワイド）", definition: "3着以内の2艇を当てる舟券。15通りで的中しやすい", category: "betting", importance: "high" },
+      { term: "オッズ", definition: "配当倍率。人気がないほど高くなり、締切直前まで変動する", category: "betting", importance: "high" },
+      { term: "本命", definition: "1番人気で勝つ可能性が高いとされる艇", category: "betting", importance: "high" },
+      { term: "穴", definition: "人気がないが高配当が期待できる艇。万舟券の可能性", category: "betting", importance: "high" },
+      
+      // モーター・艇 - 高
+      { term: "モーター", definition: "エンジンのこと。レース場ごとに保有し、節の初日に抽選で決まる", category: "equipment", importance: "high" },
+      { term: "ボート（艇）", definition: "レースで使用する船。モーターと同様に抽選で割り当て", category: "equipment", importance: "high" },
+      { term: "モーター2連対率", definition: "そのモーターを使用した選手の2着以内率。機力の指標", category: "equipment", importance: "high" },
+      { term: "プロペラ", definition: "推進力を生むパーツ。選手が自分で調整・交換可能", category: "equipment", importance: "high" },
+      
+      // レース関連 - 高
+      { term: "SG（スペシャルグレード）", definition: "最高峰のグレードレース。グランプリ、クラシックなど年間9戦", category: "race", importance: "high" },
+      { term: "G1", definition: "SGに次ぐグレードレース。周年記念、地区選手権など", category: "race", importance: "high" },
+      { term: "一般戦", definition: "グレードなしの通常レース。最も開催数が多い", category: "race", importance: "high" },
+      { term: "節", definition: "数日間にわたる開催単位。通常4〜7日間", category: "race", importance: "high" },
+      { term: "予選", definition: "節の序盤に行われるレース。得点を競い上位が準優勝戦へ", category: "race", importance: "high" },
+      { term: "優勝戦", definition: "節の最終日に行われる決勝レース。上位6名で争う", category: "race", importance: "high" },
+      
+      // =====================================
+      // 重要度：中（重要）- 予想に役立つ実践的な用語
+      // =====================================
+      
+      // コース・レース関連 - 中
+      { term: "水面", definition: "レースが行われる競走水面のこと。各場で特徴が異なる", category: "course", importance: "medium" },
+      { term: "センターコース", definition: "3〜4コースのこと。イン・アウトの中間的な位置", category: "course", importance: "medium" },
+      { term: "大外", definition: "6コースのこと。最も外側で不利とされる", category: "course", importance: "medium" },
+      { term: "スタンド側", definition: "観客席がある側。1マーク側のターンで重要", category: "course", importance: "medium" },
+      { term: "対岸", definition: "スタンドの反対側。2マーク側", category: "course", importance: "medium" },
+      { term: "振り幅", definition: "ターンマークを回る際の角度。小さいほど効率的", category: "course", importance: "medium" },
+      
+      // スタート関連 - 中
+      { term: "スタート展示", definition: "本番前に行うスタートの練習・公開。スタート力の参考になる", category: "start", importance: "medium" },
+      { term: "コース取り", definition: "スタート前にどのコースを取るかの駆け引き", category: "start", importance: "medium" },
+      { term: "スロースタート", definition: "助走距離を短くして内側から出るスタート。インコース向け", category: "start", importance: "medium" },
+      { term: "ダッシュスタート", definition: "助走距離を長くして外側から勢いよく出るスタート", category: "start", importance: "medium" },
+      { term: "起こし", definition: "スタート前にエンジン回転を上げ始める動作", category: "start", importance: "medium" },
+      { term: "カド", definition: "スロー勢とダッシュ勢の境目。通常4コースが多い", category: "start", importance: "medium" },
+      { term: "カドまくり", definition: "カド位置から一気にまくっていく戦法", category: "start", importance: "medium" },
+      { term: "前づけ", definition: "外枠の選手が内側のコースを奪いに行く行為", category: "start", importance: "medium" },
+      { term: "深イン", definition: "1コースの選手が通常より深い位置からスタートすること", category: "start", importance: "medium" },
+      { term: "ピット離れ", definition: "ピットアウトの速さ。コース取りに影響する", category: "start", importance: "medium" },
+      { term: "行き足", definition: "スタートから1マークまでの加速力", category: "start", importance: "medium" },
+      
+      // 決まり手・技術 - 中
+      { term: "ツケマイ", definition: "内側の艇に接近してターンし、引き波で失速させる技", category: "technique", importance: "medium" },
+      { term: "モンキーターン", definition: "艇の上に立ち上がって鋭くターンする技術。現代の主流", category: "technique", importance: "medium" },
+      { term: "握る", definition: "スロットルレバーを全開にすること。ターンで握ると流れる", category: "technique", importance: "medium" },
+      { term: "絞る", definition: "ターンで内側に寄せて相手のコースを狭める技術", category: "technique", importance: "medium" },
+      { term: "引き波", definition: "艇が進む際に後方にできる波。後続艇の走りに影響", category: "technique", importance: "medium" },
+      { term: "乗り心地", definition: "艇の安定感。展示で確認できる重要な要素", category: "technique", importance: "medium" },
+      { term: "回り足", definition: "ターンの回りやすさ。旋回性能のこと", category: "technique", importance: "medium" },
+      { term: "出足", definition: "スタートからの加速力。低速域での伸び", category: "technique", importance: "medium" },
+      { term: "伸び", definition: "直線での最高速。トップスピードのこと", category: "technique", importance: "medium" },
+      { term: "伸び型", definition: "直線で伸びるセッティング。ダッシュ有利", category: "technique", importance: "medium" },
+      { term: "出足型", definition: "加速重視のセッティング。スロー有利", category: "technique", importance: "medium" },
+      { term: "先マイ", definition: "1マークを最初に回ること。非常に有利", category: "technique", importance: "medium" },
+      
+      // 選手関連 - 中
+      { term: "枠番", definition: "1〜6の出走番号。通常この番号のコースからスタート", category: "player", importance: "medium" },
+      { term: "着順点", definition: "1着10点、2着8点...と着順に応じた点数。勝率計算の基準", category: "player", importance: "medium" },
+      { term: "得点率", definition: "節間の着順点平均。予選突破の基準になる", category: "player", importance: "medium" },
+      { term: "イン屋", definition: "1コース（内側）を好む選手。前づけが得意", category: "player", importance: "medium" },
+      { term: "アウト屋", definition: "外側コースを好む選手。現在は非常に少ない", category: "player", importance: "medium" },
+      { term: "地元選手", definition: "そのレース場を本拠地とする選手。水面を熟知", category: "player", importance: "medium" },
+      { term: "登録番号", definition: "選手固有の番号。若い番号ほどベテラン", category: "player", importance: "medium" },
+      { term: "支部", definition: "選手が所属する地区。全国に18支部ある", category: "player", importance: "medium" },
+      { term: "同期", definition: "同じ養成所を卒業した選手。同期対決は注目される", category: "player", importance: "medium" },
+      { term: "師弟関係", definition: "師匠と弟子の関係。技術やノウハウを継承", category: "player", importance: "medium" },
+      
+      // 舟券関連 - 中
+      { term: "万舟券", definition: "配当が1万円を超える舟券。100倍以上のオッズ", category: "betting", importance: "medium" },
+      { term: "ガチガチ", definition: "本命決着で配当が低いこと。堅いレース", category: "betting", importance: "medium" },
+      { term: "荒れる", definition: "人気薄が上位に来て高配当になること", category: "betting", importance: "medium" },
+      { term: "鉄板", definition: "ほぼ確実に的中すると思われる買い目", category: "betting", importance: "medium" },
+      { term: "軸", definition: "予想の中心となる艇。軸を決めて流すのが基本", category: "betting", importance: "medium" },
+      { term: "流し", definition: "軸を決めて他の艇を相手に複数買う方法", category: "betting", importance: "medium" },
+      { term: "ボックス", definition: "選んだ艇の全組み合わせを買う方法", category: "betting", importance: "medium" },
+      { term: "フォーメーション", definition: "1着・2着・3着それぞれに複数艇を選ぶ買い方", category: "betting", importance: "medium" },
+      { term: "点数", definition: "購入する舟券の組み合わせ数", category: "betting", importance: "medium" },
+      { term: "回収率", definition: "投資金額に対する払戻金額の割合。100%以上でプラス", category: "betting", importance: "medium" },
+      { term: "的中率", definition: "購入したレースのうち当たった割合", category: "betting", importance: "medium" },
+      { term: "トリガミ", definition: "的中したが配当が購入金額を下回ること", category: "betting", importance: "medium" },
+      
+      // モーター・艇 - 中
+      { term: "チルト角度", definition: "モーターの取り付け角度。-0.5〜+3.0度で調整可能", category: "equipment", importance: "medium" },
+      { term: "チルト0.5度", definition: "出足重視の角度。インコース向け", category: "equipment", importance: "medium" },
+      { term: "チルト3.0度", definition: "伸び重視の角度。アウトコース向け", category: "equipment", importance: "medium" },
+      { term: "部品交換", definition: "モーターの部品を交換すること。整備の一環", category: "equipment", importance: "medium" },
+      { term: "ペラ調整", definition: "プロペラの角度や形状を調整すること", category: "equipment", importance: "medium" },
+      { term: "キャブレター", definition: "燃料と空気を混合する部品。交換頻度が高い", category: "equipment", importance: "medium" },
+      { term: "電気系統", definition: "点火プラグなどの電気部品。調子に影響大", category: "equipment", importance: "medium" },
+      { term: "機力", definition: "モーターの性能。勝敗を左右する重要要素", category: "equipment", importance: "medium" },
+      { term: "モーター抽選", definition: "節初日に行われるモーターの抽選会", category: "equipment", importance: "medium" },
+      
+      // レース関連 - 中
+      { term: "G2", definition: "G1に次ぐグレードレース。モーターボート大賞など", category: "race", importance: "medium" },
+      { term: "G3", definition: "G2に次ぐグレードレース。企業杯など", category: "race", importance: "medium" },
+      { term: "準優勝戦", definition: "予選上位者による準決勝。上位2名が優勝戦へ", category: "race", importance: "medium" },
+      { term: "得点率トライアル", definition: "予選における得点率での順位決定方式", category: "race", importance: "medium" },
+      { term: "選抜戦", definition: "特定条件の選手による特別レース", category: "race", importance: "medium" },
+      { term: "ドリーム戦", definition: "予選1日目夜の注目選手によるレース", category: "race", importance: "medium" },
+      { term: "ナイター", definition: "夜間開催のレース。照明下で行われる", category: "race", importance: "medium" },
+      { term: "モーニング", definition: "朝から開催のレース。早朝から発売", category: "race", importance: "medium" },
+      { term: "デイ", definition: "昼間開催の通常レース", category: "race", importance: "medium" },
+      { term: "斡旋", definition: "選手がレースに出場するよう割り当てられること", category: "race", importance: "medium" },
+      
+      // 天候・水面 - 中
+      { term: "追い風", definition: "スタート方向に吹く風。スタートが早くなりやすい", category: "weather", importance: "medium" },
+      { term: "向かい風", definition: "スタートと逆方向の風。スタートが遅れやすい", category: "weather", importance: "medium" },
+      { term: "横風", definition: "横から吹く風。艇のコントロールが難しくなる", category: "weather", importance: "medium" },
+      { term: "波高", definition: "波の高さ。高いとターンが難しくなる", category: "weather", importance: "medium" },
+      { term: "静水面", definition: "波が穏やかな水面状態。技術差が出やすい", category: "weather", importance: "medium" },
+      { term: "荒れ水面", definition: "波が高い水面状態。荒れに強い選手が有利", category: "weather", importance: "medium" },
+      { term: "潮", definition: "海水を利用する競艇場での潮の満ち引き", category: "weather", importance: "medium" },
+      { term: "満潮", definition: "潮が満ちた状態。水面が安定しやすい", category: "weather", importance: "medium" },
+      { term: "干潮", definition: "潮が引いた状態。うねりが出やすい", category: "weather", importance: "medium" },
+      
+      // =====================================
+      // 重要度：低（応用）- より詳しく知りたい人向けの専門用語
+      // =====================================
+      
+      // コース・レース関連 - 低
+      { term: "展示ピット", definition: "展示航走時に選手が待機する場所", category: "course", importance: "low" },
+      { term: "大回り", definition: "ターンマークを大きく回ること。タイムロスになる", category: "course", importance: "low" },
+      { term: "小回り", definition: "ターンマークを小さく回ること。効率的", category: "course", importance: "low" },
+      { term: "バック側", definition: "バックストレッチ側のこと", category: "course", importance: "low" },
+      { term: "内側規制線", definition: "ターン時に艇が入れない区域の境界線", category: "course", importance: "low" },
+      { term: "空中線標識", definition: "スタートラインの目印となる標識", category: "course", importance: "low" },
+      { term: "発走ピット", definition: "スタート前に艇が待機するピット", category: "course", importance: "low" },
+      { term: "周回", definition: "コースを1周すること。通常3周で競う", category: "course", importance: "low" },
+      { term: "第1ターンマーク", definition: "1マークの正式名称", category: "course", importance: "low" },
+      { term: "第2ターンマーク", definition: "2マークの正式名称", category: "course", importance: "low" },
+      
+      // スタート関連 - 低
+      { term: "12秒針", definition: "大時計の長針。12秒前から動き始める", category: "start", importance: "low" },
+      { term: "スタート無事故", definition: "フライングや出遅れなしの記録", category: "start", importance: "low" },
+      { term: "F休み", definition: "フライングによる出場停止期間", category: "start", importance: "low" },
+      { term: "F2", definition: "同一期に2回フライングすること。長期休み", category: "start", importance: "low" },
+      { term: "スタート特訓", definition: "スタート練習のための特別訓練", category: "start", importance: "low" },
+      { term: "スリット", definition: "スタートラインと同じ位置の横並び状態", category: "start", importance: "low" },
+      { term: "スリット写真", definition: "スタート時の横並びを撮影した写真", category: "start", importance: "low" },
+      { term: "スリット隊形", definition: "スタート時の6艇の並び方", category: "start", importance: "low" },
+      { term: "壁", definition: "インコースを守る艇。外からの攻めを防ぐ", category: "start", importance: "low" },
+      { term: "艇間", definition: "艇と艇の間隔。狭いとぶつかるリスク", category: "start", importance: "low" },
+      { term: "凹む", definition: "スタートで出遅れること。隊形が凹む", category: "start", importance: "low" },
+      { term: "飛び出す", definition: "スタートで他艇より先に出ること", category: "start", importance: "low" },
+      { term: "揃う", definition: "スタートラインで6艇がほぼ横一線になること", category: "start", importance: "low" },
+      
+      // 決まり手・技術 - 低
+      { term: "全速ターン", definition: "スロットルを全開にしたままターンする技術", category: "technique", importance: "low" },
+      { term: "レバー操作", definition: "スロットルレバーの操作。握る・放すを繰り返す", category: "technique", importance: "low" },
+      { term: "舟足", definition: "艇の走り具合。展示で確認する", category: "technique", importance: "low" },
+      { term: "乗り方", definition: "選手の艇の操縦スタイル", category: "technique", importance: "low" },
+      { term: "バタつく", definition: "艇が安定せずバタバタ動くこと", category: "technique", importance: "low" },
+      { term: "跳ねる", definition: "艇が波で跳ね上がること", category: "technique", importance: "low" },
+      { term: "滑る", definition: "ターンで艇が外に流れること", category: "technique", importance: "low" },
+      { term: "キャビる", definition: "プロペラに空気が入り推進力が落ちること", category: "technique", importance: "low" },
+      { term: "ターン足", definition: "ターン時の艇の動き・性能", category: "technique", importance: "low" },
+      { term: "直線足", definition: "直線での艇の走り・スピード", category: "technique", importance: "low" },
+      { term: "スピード艇", definition: "直線スピードが出る艇の状態", category: "technique", importance: "low" },
+      { term: "引っ張る", definition: "外の艇を内に寄せさせないようにすること", category: "technique", importance: "low" },
+      { term: "ブロック", definition: "他艇の進路を妨害すること", category: "technique", importance: "low" },
+      { term: "かぶる", definition: "他艇の引き波を受けて失速すること", category: "technique", importance: "low" },
+      { term: "外に振る", definition: "ターンで外側に膨らむこと", category: "technique", importance: "low" },
+      { term: "叩く", definition: "他艇と接触すること", category: "technique", importance: "low" },
+      { term: "のまれる", definition: "他艇に包まれて動けなくなること", category: "technique", importance: "low" },
+      
+      // 選手関連 - 低
+      { term: "養成所", definition: "選手を養成する施設。福岡県柳川市にある", category: "player", importance: "low" },
+      { term: "訓練生", definition: "養成所で訓練中の選手候補", category: "player", importance: "low" },
+      { term: "卒業期", definition: "養成所を卒業した期。○○期と呼ばれる", category: "player", importance: "low" },
+      { term: "デビュー", definition: "選手として初めてレースに出走すること", category: "player", importance: "low" },
+      { term: "初勝利", definition: "選手として初めて1着を取ること", category: "player", importance: "low" },
+      { term: "初優出", definition: "初めて優勝戦に出場すること", category: "player", importance: "low" },
+      { term: "初優勝", definition: "初めて優勝戦で1着を取ること", category: "player", importance: "low" },
+      { term: "引退", definition: "選手登録を抹消して競技をやめること", category: "player", importance: "low" },
+      { term: "復帰", definition: "怪我や出場停止から戻ること", category: "player", importance: "low" },
+      { term: "移籍", definition: "所属支部を変更すること", category: "player", importance: "low" },
+      { term: "女子選手", definition: "女性のボートレーサー。増加傾向", category: "player", importance: "low" },
+      { term: "レディースチャンピオン", definition: "女子選手のSGレース", category: "player", importance: "low" },
+      { term: "出走回数", definition: "選手が出走したレースの総数", category: "player", importance: "low" },
+      { term: "通算勝利", definition: "選手の通算1着回数", category: "player", importance: "low" },
+      { term: "生涯獲得賞金", definition: "選手が獲得した賞金の累計", category: "player", importance: "low" },
+      { term: "フライング持ち", definition: "直近でフライングをした選手。慎重になりやすい", category: "player", importance: "low" },
+      { term: "スタート巧者", definition: "スタートが上手い選手", category: "player", importance: "low" },
+      { term: "ターン巧者", definition: "ターンが上手い選手", category: "player", importance: "low" },
+      { term: "差し巧者", definition: "差しが上手い選手", category: "player", importance: "low" },
+      { term: "まくり巧者", definition: "まくりが上手い選手", category: "player", importance: "low" },
+      
+      // 舟券関連 - 低
+      { term: "特払い", definition: "対象の舟券が全て不的中の場合の払戻し。70円", category: "betting", importance: "low" },
+      { term: "同着", definition: "2艇以上が同時にゴールすること。払戻しに影響", category: "betting", importance: "low" },
+      { term: "不成立", definition: "レースが成立しないこと。舟券は返還", category: "betting", importance: "low" },
+      { term: "返還", definition: "舟券代金が払い戻されること", category: "betting", importance: "low" },
+      { term: "テレボート", definition: "電話・インターネット投票サービス", category: "betting", importance: "low" },
+      { term: "場外発売", definition: "他場のレースの舟券を発売すること", category: "betting", importance: "low" },
+      { term: "締切時間", definition: "舟券購入ができなくなる時間", category: "betting", importance: "low" },
+      { term: "発売締切", definition: "舟券発売が終了する時刻", category: "betting", importance: "low" },
+      { term: "売上", definition: "そのレースの舟券総売上金額", category: "betting", importance: "low" },
+      { term: "控除率", definition: "売上から運営費として差し引かれる割合。約25%", category: "betting", importance: "low" },
+      { term: "払戻率", definition: "売上から払い戻される割合。約75%", category: "betting", importance: "low" },
+      { term: "重勝式", definition: "複数レースの結果を予想する舟券。WIN5など", category: "betting", importance: "low" },
+      { term: "中穴", definition: "本命ではないが大穴でもない中間的な配当", category: "betting", importance: "low" },
+      { term: "堅い", definition: "本命決着しやすいレース", category: "betting", importance: "low" },
+      { term: "手広く", definition: "多くの組み合わせを購入すること", category: "betting", importance: "low" },
+      { term: "絞る", definition: "購入する組み合わせを少なくすること", category: "betting", importance: "low" },
+      { term: "人気サイド", definition: "人気上位の組み合わせ", category: "betting", importance: "low" },
+      { term: "穴サイド", definition: "人気下位の組み合わせ", category: "betting", importance: "low" },
+      
+      // モーター・艇 - 低
+      { term: "シリンダーケース", definition: "エンジンの主要部品。交換すると出足向上", category: "equipment", importance: "low" },
+      { term: "クランクシャフト", definition: "エンジンの回転軸。交換で性能向上", category: "equipment", importance: "low" },
+      { term: "ピストン", definition: "エンジン内で上下運動する部品", category: "equipment", importance: "low" },
+      { term: "リング", definition: "ピストンに付けるリング。気密性を保つ", category: "equipment", importance: "low" },
+      { term: "キャリアボデー", definition: "プロペラを取り付ける部品", category: "equipment", importance: "low" },
+      { term: "ギアケース", definition: "ギアを収納するケース", category: "equipment", importance: "low" },
+      { term: "整備", definition: "モーターや艇の調整・修理作業", category: "equipment", importance: "low" },
+      { term: "前検", definition: "節前日の検査。モーター抽選も行われる", category: "equipment", importance: "low" },
+      { term: "試運転", definition: "本番前にモーターを試す運転", category: "equipment", importance: "low" },
+      { term: "ペラグループ", definition: "プロペラを共同で調整する選手グループ", category: "equipment", importance: "low" },
+      { term: "オリジナルペラ", definition: "選手独自のプロペラ調整", category: "equipment", importance: "low" },
+      { term: "持ちペラ制度", definition: "かつて選手が自分のプロペラを持参できた制度", category: "equipment", importance: "low" },
+      { term: "減音モーター", definition: "騒音を減らした新型モーター", category: "equipment", importance: "low" },
+      { term: "艇番", definition: "艇に割り当てられた番号", category: "equipment", importance: "low" },
+      { term: "新ペラ", definition: "新品のプロペラに交換すること", category: "equipment", importance: "low" },
+      
+      // レース関連 - 低
+      { term: "グランプリ", definition: "年末に行われる最高峰のSGレース", category: "race", importance: "low" },
+      { term: "クラシック", definition: "春に行われるSGレース", category: "race", importance: "low" },
+      { term: "オールスター", definition: "ファン投票で出場者が決まるSGレース", category: "race", importance: "low" },
+      { term: "メモリアル", definition: "お盆時期に行われるSGレース", category: "race", importance: "low" },
+      { term: "オーシャンカップ", definition: "夏に行われるSGレース", category: "race", importance: "low" },
+      { term: "チャレンジカップ", definition: "秋に行われるSGレース", category: "race", importance: "low" },
+      { term: "ダービー", definition: "秋に行われるSGレース。全日本選手権", category: "race", importance: "low" },
+      { term: "周年記念", definition: "各競艇場の開設記念G1レース", category: "race", importance: "low" },
+      { term: "地区選手権", definition: "地区ごとに行われるG1レース", category: "race", importance: "low" },
+      { term: "新鋭リーグ", definition: "若手選手によるリーグ戦", category: "race", importance: "low" },
+      { term: "マスターズリーグ", definition: "ベテラン選手によるリーグ戦", category: "race", importance: "low" },
+      { term: "女子王座決定戦", definition: "女子選手のG1レース", category: "race", importance: "low" },
+      { term: "ヴィーナスシリーズ", definition: "女子選手によるシリーズ戦", category: "race", importance: "low" },
+      { term: "ルーキーシリーズ", definition: "新人選手によるシリーズ戦", category: "race", importance: "low" },
+      { term: "企業杯", definition: "企業がスポンサーとなるG3レース", category: "race", importance: "low" },
+      { term: "競走中止", definition: "レース中に走行をやめること", category: "race", importance: "low" },
+      { term: "失格", definition: "ルール違反などで資格を失うこと", category: "race", importance: "low" },
+      { term: "妨害失格", definition: "他艇を妨害したことによる失格", category: "race", importance: "low" },
+      { term: "転覆", definition: "艇がひっくり返ること", category: "race", importance: "low" },
+      { term: "落水", definition: "選手が艇から落ちること", category: "race", importance: "low" },
+      { term: "不完走", definition: "ゴールできずにレースを終えること", category: "race", importance: "low" },
+      { term: "欠場", definition: "レースに出走しないこと", category: "race", importance: "low" },
+      { term: "負傷欠場", definition: "怪我のためレースを欠場すること", category: "race", importance: "low" },
+      { term: "選責", definition: "選手責任の事故", category: "race", importance: "low" },
+      { term: "不良航法", definition: "危険な航法でのペナルティ", category: "race", importance: "low" },
+      { term: "待機行動違反", definition: "待機行動でのルール違反", category: "race", importance: "low" },
+      
+      // 天候・水面 - 低
+      { term: "風速", definition: "風の強さ。強いとレースに大きく影響", category: "weather", importance: "low" },
+      { term: "無風", definition: "風がほとんどない状態", category: "weather", importance: "low" },
+      { term: "微風", definition: "わずかな風。影響は少ない", category: "weather", importance: "low" },
+      { term: "強風", definition: "強い風。レース展開に大きく影響", category: "weather", importance: "low" },
+      { term: "安定板", definition: "強風時に艇に取り付ける安定用の板", category: "weather", importance: "low" },
+      { term: "うねり", definition: "周期の長い波。艇の操縦が難しくなる", category: "weather", importance: "low" },
+      { term: "さざ波", definition: "小さな波。影響は少ない", category: "weather", importance: "low" },
+      { term: "水温", definition: "水面の温度。低いとモーターの調子が上がる", category: "weather", importance: "low" },
+      { term: "気温", definition: "気温。モーターの出力に影響", category: "weather", importance: "low" },
+      { term: "淡水", definition: "塩分を含まない水。多くの競艇場で使用", category: "weather", importance: "low" },
+      { term: "海水", definition: "塩分を含む水。浮力が大きい", category: "weather", importance: "low" },
+      { term: "汽水", definition: "淡水と海水が混じった水", category: "weather", importance: "low" },
+      { term: "インが利く", definition: "水面状況がインコースに有利なこと", category: "weather", importance: "low" },
+      { term: "センターが利く", definition: "水面状況がセンターコースに有利なこと", category: "weather", importance: "low" },
+      { term: "アウトが利く", definition: "水面状況がアウトコースに有利なこと", category: "weather", importance: "low" },
+      
+      // その他 - 低
+      { term: "出走表", definition: "レースの出場選手一覧。様々なデータが記載", category: "other", importance: "low" },
+      { term: "周回展示", definition: "本番前に行うコース2周の試走", category: "other", importance: "low" },
+      { term: "展示タイム", definition: "展示航走での直線タイム。機力の目安", category: "other", importance: "low" },
+      { term: "周回タイム", definition: "展示航走での周回タイム", category: "other", importance: "low" },
+      { term: "コメント", definition: "選手の調整状況などのコメント", category: "other", importance: "low" },
+      { term: "気配", definition: "選手や艇の調子・雰囲気", category: "other", importance: "low" },
+      { term: "本線", definition: "最も可能性が高いと思われる予想", category: "other", importance: "low" },
+      { term: "対抗", definition: "本線に次いで可能性がある予想", category: "other", importance: "low" },
+      { term: "穴狙い", definition: "高配当を狙った予想", category: "other", importance: "low" },
+      { term: "消し", definition: "予想から除外すること", category: "other", importance: "low" },
+      { term: "データ派", definition: "データを重視する予想スタイル", category: "other", importance: "low" },
+      { term: "直感派", definition: "直感を重視する予想スタイル", category: "other", importance: "low" },
+      { term: "競艇場", definition: "ボートレースが行われる場所。全国24場", category: "other", importance: "low" },
+      { term: "ボートレース場", definition: "競艇場の正式名称", category: "other", importance: "low" },
+      { term: "場内", definition: "競艇場内のこと", category: "other", importance: "low" },
+      { term: "外向発売所", definition: "競艇場外の舟券発売所", category: "other", importance: "low" },
+      { term: "指定席", definition: "有料の特別席", category: "other", importance: "low" },
+      { term: "一般席", definition: "無料で利用できる観覧席", category: "other", importance: "low" },
+      { term: "パドック", definition: "レース前に艇を展示する場所", category: "other", importance: "low" },
+      { term: "放送室", definition: "実況や場内放送を行う部屋", category: "other", importance: "low" },
+      { term: "審判", definition: "レースの判定を行う役員", category: "other", importance: "low" },
+      { term: "検査員", definition: "艇やモーターを検査する役員", category: "other", importance: "low" },
+      { term: "写真判定", definition: "着順をカメラで判定すること", category: "other", importance: "low" },
+      { term: "着順確定", definition: "正式に着順が決まること", category: "other", importance: "low" },
+      { term: "払戻金", definition: "的中した舟券に対して支払われる金額", category: "other", importance: "low" },
+      { term: "配当金", definition: "払戻金と同じ意味", category: "other", importance: "low" },
+      { term: "実況", definition: "レースの状況を伝えるアナウンス", category: "other", importance: "low" },
+      { term: "レース映像", definition: "レースを録画した映像", category: "other", importance: "low" },
+      { term: "リプレイ", definition: "レース映像の再生", category: "other", importance: "low" },
+      { term: "ライブ中継", definition: "レースのリアルタイム配信", category: "other", importance: "low" },
+      { term: "予想屋", definition: "予想を販売する人", category: "other", importance: "low" },
+      { term: "予想紙", definition: "レース予想が掲載された新聞", category: "other", importance: "low" },
+      { term: "専門紙", definition: "競艇専門の新聞", category: "other", importance: "low" },
+      { term: "記者予想", definition: "新聞記者による予想", category: "other", importance: "low" },
+      { term: "AI予想", definition: "人工知能による予想", category: "other", importance: "low" },
+      { term: "買い目", definition: "舟券で購入する組み合わせ", category: "other", importance: "low" },
+      { term: "厚張り", definition: "自信のある買い目に多く賭けること", category: "other", importance: "low" },
+      { term: "均等張り", definition: "全ての買い目に同額賭けること", category: "other", importance: "low" },
     ];
 
     const categoryNames = {
@@ -341,29 +734,65 @@
       technique: "決まり手",
       player: "選手",
       betting: "舟券",
+      equipment: "モーター・艇",
+      race: "レース",
+      weather: "天候・水面",
       other: "その他"
+    };
+
+    const importanceNames = {
+      high: "必須",
+      medium: "重要",
+      low: "応用"
     };
 
     let currentIndex = 0;
     let filteredWords = [...words];
     let learnedWords = new Set();
+    let currentCategory = "all";
+    let currentImportance = "all";
 
     const card = document.getElementById('card');
     const term = document.getElementById('term');
     const definition = document.getElementById('definition');
     const categoryTag = document.getElementById('categoryTag');
+    const importanceTag = document.getElementById('importanceTag');
     const currentSpan = document.getElementById('current');
     const totalSpan = document.getElementById('total');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const shuffleBtn = document.getElementById('shuffleBtn');
     const wordGrid = document.getElementById('wordGrid');
+    const stats = document.getElementById('stats');
+
+    function filterWords() {
+      filteredWords = words.filter(w => {
+        const categoryMatch = currentCategory === "all" || w.category === currentCategory;
+        const importanceMatch = currentImportance === "all" || w.importance === currentImportance;
+        return categoryMatch && importanceMatch;
+      });
+      currentIndex = 0;
+      updateCard();
+      renderWordList();
+      updateStats();
+    }
+
+    function updateStats() {
+      const highCount = words.filter(w => w.importance === "high").length;
+      const mediumCount = words.filter(w => w.importance === "medium").length;
+      const lowCount = words.filter(w => w.importance === "low").length;
+      stats.innerHTML = `全${words.length}語 | 🔴必須: ${highCount} | 🟡重要: ${mediumCount} | 🟢応用: ${lowCount} | 学習済: ${learnedWords.size}`;
+    }
 
     function updateCard() {
       if (filteredWords.length === 0) {
         term.textContent = "用語がありません";
-        definition.textContent = "";
+        definition.textContent = "フィルターを変更してください";
         categoryTag.textContent = "";
+        importanceTag.textContent = "";
+        importanceTag.className = "importance-tag";
+        currentSpan.textContent = 0;
+        totalSpan.textContent = 0;
         return;
       }
       
@@ -371,6 +800,8 @@
       term.textContent = word.term;
       definition.textContent = word.definition;
       categoryTag.textContent = categoryNames[word.category];
+      importanceTag.textContent = importanceNames[word.importance];
+      importanceTag.className = `importance-tag ${word.importance}`;
       currentSpan.textContent = currentIndex + 1;
       totalSpan.textContent = filteredWords.length;
       
@@ -384,7 +815,7 @@
       wordGrid.innerHTML = '';
       filteredWords.forEach((word, index) => {
         const item = document.createElement('div');
-        item.className = 'word-item' + (learnedWords.has(word.term) ? ' learned' : '');
+        item.className = `word-item ${word.importance}` + (learnedWords.has(word.term) ? ' learned' : '');
         item.textContent = word.term;
         item.addEventListener('click', () => {
           currentIndex = index;
@@ -393,17 +824,6 @@
         });
         wordGrid.appendChild(item);
       });
-    }
-
-    function filterByCategory(category) {
-      if (category === 'all') {
-        filteredWords = [...words];
-      } else {
-        filteredWords = words.filter(w => w.category === category);
-      }
-      currentIndex = 0;
-      updateCard();
-      renderWordList();
     }
 
     function shuffle(array) {
@@ -417,9 +837,10 @@
     // Event Listeners
     card.addEventListener('click', () => {
       card.classList.toggle('flipped');
-      if (card.classList.contains('flipped')) {
+      if (card.classList.contains('flipped') && filteredWords.length > 0) {
         learnedWords.add(filteredWords[currentIndex].term);
         renderWordList();
+        updateStats();
       }
     });
 
@@ -448,7 +869,17 @@
       btn.addEventListener('click', () => {
         document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        filterByCategory(btn.dataset.category);
+        currentCategory = btn.dataset.category;
+        filterWords();
+      });
+    });
+
+    document.querySelectorAll('.importance-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.importance-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentImportance = btn.dataset.importance;
+        filterWords();
       });
     });
 
@@ -463,9 +894,10 @@
       } else if (e.key === ' ') {
         e.preventDefault();
         card.classList.toggle('flipped');
-        if (card.classList.contains('flipped')) {
+        if (card.classList.contains('flipped') && filteredWords.length > 0) {
           learnedWords.add(filteredWords[currentIndex].term);
           renderWordList();
+          updateStats();
         }
       }
     });
@@ -473,6 +905,7 @@
     // Initialize
     updateCard();
     renderWordList();
+    updateStats();
   </script>
 </body>
 </html>
