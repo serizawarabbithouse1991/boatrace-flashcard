@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ボートレース用語 単語帳</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: white;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .category-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .category-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+
+    .category-btn:hover, .category-btn.active {
+      background: rgba(255,255,255,0.9);
+      color: #1e3c72;
+    }
+
+    .progress {
+      color: white;
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    .card-container {
+      perspective: 1000px;
+      width: 100%;
+      max-width: 400px;
+      height: 280px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+      cursor: pointer;
+    }
+
+    .card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .card-front {
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    }
+
+    .card-back {
+      background: linear-gradient(145deg, #ffd700, #ffb700);
+      transform: rotateY(180deg);
+    }
+
+    .term {
+      font-size: 32px;
+      font-weight: bold;
+      color: #1e3c72;
+      text-align: center;
+    }
+
+    .category-tag {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: #1e3c72;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+    }
+
+    .definition {
+      font-size: 20px;
+      color: #333;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .hint {
+      position: absolute;
+      bottom: 15px;
+      color: #888;
+      font-size: 14px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: bold;
+    }
+
+    .btn-prev, .btn-next {
+      background: white;
+      color: #1e3c72;
+    }
+
+    .btn-prev:hover, .btn-next:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .btn-shuffle {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .btn-shuffle:hover {
+      background: #ee5a5a;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .keyboard-hint {
+      color: rgba(255,255,255,0.7);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .word-list {
+      background: rgba(255,255,255,0.1);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .word-list h3 {
+      color: white;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .word-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+    }
+
+    .word-item {
+      background: rgba(255,255,255,0.9);
+      padding: 8px 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .word-item:hover {
+      background: #ffd700;
+      transform: scale(1.05);
+    }
+
+    .word-item.learned {
+      background: #90EE90;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚤 ボートレース用語 単語帳</h1>
+  
+  <div class="category-selector">
+    <button class="category-btn active" data-category="all">すべて</button>
+    <button class="category-btn" data-category="course">コース</button>
+    <button class="category-btn" data-category="start">スタート</button>
+    <button class="category-btn" data-category="technique">決まり手</button>
+    <button class="category-btn" data-category="player">選手</button>
+    <button class="category-btn" data-category="betting">舟券</button>
+    <button class="category-btn" data-category="other">その他</button>
+  </div>
+
+  <div class="progress">
+    <span id="current">1</span> / <span id="total">0</span>
+  </div>
+
+  <div class="card-container">
+    <div class="card" id="card">
+      <div class="card-face card-front">
+        <span class="category-tag" id="categoryTag">カテゴリ</span>
+        <div class="term" id="term">用語</div>
+        <span class="hint">クリックで意味を表示</span>
+      </div>
+      <div class="card-face card-back">
+        <div class="definition" id="definition">意味</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-prev" id="prevBtn">◀ 前へ</button>
+    <button class="btn btn-shuffle" id="shuffleBtn">🔀 シャッフル</button>
+    <button class="btn btn-next" id="nextBtn">次へ ▶</button>
+  </div>
+
+  <div class="keyboard-hint">
+    キーボード: ← 前へ / → 次へ / Space めくる
+  </div>
+
+  <div class="word-list">
+    <h3>📚 用語一覧（クリックでジャンプ）</h3>
+    <div class="word-grid" id="wordGrid"></div>
+  </div>
+
+  <script>
+    const words = [
+      // コース・レース関連
+      { term: "ピット", definition: "選手がスタート前に待機する場所", category: "course" },
+      { term: "スタートライン", definition: "レース開始地点。ここを通過してレースが始まる", category: "course" },
+      { term: "1マーク", definition: "第1ターンマーク。最初のコーナーにあるブイ", category: "course" },
+      { term: "2マーク", definition: "第2ターンマーク。2番目のコーナーにあるブイ", category: "course" },
+      { term: "バックストレッチ", definition: "1マークと2マークの間の直線部分", category: "course" },
+      { term: "ホームストレッチ", definition: "スタンド前の直線部分", category: "course" },
+      { term: "水面", definition: "レースが行われる競走水面のこと", category: "course" },
+      
+      // スタート関連
+      { term: "フライングスタート方式", definition: "決められた時間内にスタートラインを通過する方式", category: "start" },
+      { term: "大時計", definition: "スタートタイミングを示す時計。0秒でスタート", category: "start" },
+      { term: "フライング（F）", definition: "スタート時刻より早く通過した違反。返還欠場", category: "start" },
+      { term: "出遅れ（L）", definition: "スタート時刻から1秒以上遅れた違反。返還欠場", category: "start" },
+      { term: "待機行動", definition: "ピットアウトからスタートまでの動き・駆け引き", category: "start" },
+      { term: "スタート展示", definition: "本番前に行うスタートの練習・公開", category: "start" },
+      { term: "コース取り", definition: "スタート前にどのコースを取るかの駆け引き", category: "start" },
+      { term: "スロースタート", definition: "助走距離を短くして内側から出るスタート", category: "start" },
+      { term: "ダッシュスタート", definition: "助走距離を長くして外側から勢いよく出るスタート", category: "start" },
+      
+      // 決まり手
+      { term: "逃げ", definition: "1コースの艇が先行してそのまま1着でゴール", category: "technique" },
+      { term: "差し", definition: "内側から他艇を追い抜いて勝つ決まり手", category: "technique" },
+      { term: "まくり", definition: "外側から一気に追い抜いて勝つ決まり手", category: "technique" },
+      { term: "まくり差し", definition: "まくりながら内側に切り込んで勝つ決まり手", category: "technique" },
+      { term: "抜き", definition: "2周目以降に追い抜いて勝つ決まり手", category: "technique" },
+      { term: "恵まれ", definition: "他艇のフライング・転覆などで繰り上がる決まり手", category: "technique" },
+      { term: "ツケマイ", definition: "内側の艇に接近してターンし、引き波で失速させる技", category: "technique" },
+      { term: "モンキーターン", definition: "艇の上に立ち上がって鋭くターンする技術", category: "technique" },
+      
+      // 選手・階級関連
+      { term: "A1級", definition: "選手の最上位ランク。勝率上位者", category: "player" },
+      { term: "A2級", definition: "選手の2番目のランク", category: "player" },
+      { term: "B1級", definition: "選手の3番目のランク", category: "player" },
+      { term: "B2級", definition: "選手の最下位ランク。新人はここから", category: "player" },
+      { term: "勝率", definition: "選手の成績を示す数値。着順点÷出走数", category: "player" },
+      { term: "モーター", definition: "エンジンのこと。節ごとに抽選で決まる", category: "player" },
+      { term: "ボート（艇）", definition: "レースで使用する船。抽選で割り当て", category: "player" },
+      { term: "プロペラ", definition: "推進力を生むパーツ。選手が自分で調整可能", category: "player" },
+      
+      // 舟券関連
+      { term: "単勝", definition: "1着を当てる舟券", category: "betting" },
+      { term: "複勝", definition: "2着以内を当てる舟券", category: "betting" },
+      { term: "2連単", definition: "1着・2着を着順通りに当てる舟券", category: "betting" },
+      { term: "2連複", definition: "1着・2着を順不同で当てる舟券", category: "betting" },
+      { term: "3連単", definition: "1着・2着・3着を着順通りに当てる舟券", category: "betting" },
+      { term: "3連複", definition: "1着・2着・3着を順不同で当てる舟券", category: "betting" },
+      { term: "拡連複（ワイド）", definition: "3着以内の2艇を当てる舟券", category: "betting" },
+      { term: "オッズ", definition: "配当倍率。人気がないほど高くなる", category: "betting" },
+      { term: "本命", definition: "1番人気で勝つ可能性が高いとされる艇", category: "betting" },
+      { term: "穴", definition: "人気がないが高配当が期待できる艇", category: "betting" },
+      
+      // その他
+      { term: "イン屋", definition: "1コース（内側）を好む選手", category: "other" },
+      { term: "アウト屋", definition: "外側コースを好む選手", category: "other" },
+      { term: "周回展示", definition: "本番前に行うコース2周の試走", category: "other" },
+      { term: "チルト角度", definition: "モーターの取り付け角度。出足・伸びに影響", category: "other" },
+      { term: "ナイター", definition: "夜間開催のレース", category: "other" },
+      { term: "モーニング", definition: "朝から開催のレース", category: "other" },
+      { term: "SG", definition: "最高峰のグレードレース", category: "other" },
+      { term: "G1", definition: "SGに次ぐグレードレース", category: "other" },
+      { term: "一般戦", definition: "グレードなしの通常レース", category: "other" },
+      { term: "節", definition: "数日間にわたる開催単位", category: "other" },
+      { term: "斡旋", definition: "選手がレースに出場するよう割り当てられること", category: "other" },
+      { term: "転覆", definition: "艇がひっくり返ること", category: "other" },
+      { term: "落水", definition: "選手が艇から落ちること", category: "other" }
+    ];
+
+    const categoryNames = {
+      course: "コース",
+      start: "スタート",
+      technique: "決まり手",
+      player: "選手",
+      betting: "舟券",
+      other: "その他"
+    };
+
+    let currentIndex = 0;
+    let filteredWords = [...words];
+    let learnedWords = new Set();
+
+    const card = document.getElementById('card');
+    const term = document.getElementById('term');
+    const definition = document.getElementById('definition');
+    const categoryTag = document.getElementById('categoryTag');
+    const currentSpan = document.getElementById('current');
+    const totalSpan = document.getElementById('total');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const wordGrid = document.getElementById('wordGrid');
+
+    function updateCard() {
+      if (filteredWords.length === 0) {
+        term.textContent = "用語がありません";
+        definition.textContent = "";
+        categoryTag.textContent = "";
+        return;
+      }
+      
+      const word = filteredWords[currentIndex];
+      term.textContent = word.term;
+      definition.textContent = word.definition;
+      categoryTag.textContent = categoryNames[word.category];
+      currentSpan.textContent = currentIndex + 1;
+      totalSpan.textContent = filteredWords.length;
+      
+      card.classList.remove('flipped');
+      
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex === filteredWords.length - 1;
+    }
+
+    function renderWordList() {
+      wordGrid.innerHTML = '';
+      filteredWords.forEach((word, index) => {
+        const item = document.createElement('div');
+        item.className = 'word-item' + (learnedWords.has(word.term) ? ' learned' : '');
+        item.textContent = word.term;
+        item.addEventListener('click', () => {
+          currentIndex = index;
+          updateCard();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        wordGrid.appendChild(item);
+      });
+    }
+
+    function filterByCategory(category) {
+      if (category === 'all') {
+        filteredWords = [...words];
+      } else {
+        filteredWords = words.filter(w => w.category === category);
+      }
+      currentIndex = 0;
+      updateCard();
+      renderWordList();
+    }
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    // Event Listeners
+    card.addEventListener('click', () => {
+      card.classList.toggle('flipped');
+      if (card.classList.contains('flipped')) {
+        learnedWords.add(filteredWords[currentIndex].term);
+        renderWordList();
+      }
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateCard();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < filteredWords.length - 1) {
+        currentIndex++;
+        updateCard();
+      }
+    });
+
+    shuffleBtn.addEventListener('click', () => {
+      shuffle(filteredWords);
+      currentIndex = 0;
+      updateCard();
+      renderWordList();
+    });
+
+    document.querySelectorAll('.category-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        filterByCategory(btn.dataset.category);
+      });
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' && currentIndex > 0) {
+        currentIndex--;
+        updateCard();
+      } else if (e.key === 'ArrowRight' && currentIndex < filteredWords.length - 1) {
+        currentIndex++;
+        updateCard();
+      } else if (e.key === ' ') {
+        e.preventDefault();
+        card.classList.toggle('flipped');
+        if (card.classList.contains('flipped')) {
+          learnedWords.add(filteredWords[currentIndex].term);
+          renderWordList();
+        }
+      }
+    });
+
+    // Initialize
+    updateCard();
+    renderWordList();
+  </script>
+</body>
+</html>
