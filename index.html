@@ -43,7 +43,7 @@
       display: block;
     }
 
-    .category-selector, .importance-selector {
+    .category-selector, .importance-selector, .understood-selector {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
@@ -51,7 +51,7 @@
       margin-bottom: 10px;
     }
 
-    .category-btn, .importance-btn {
+    .category-btn, .importance-btn, .understood-btn {
       padding: 6px 14px;
       border: none;
       border-radius: 20px;
@@ -62,12 +62,9 @@
       font-size: 13px;
     }
 
-    .category-btn:hover, .category-btn.active {
-      background: rgba(255,255,255,0.9);
-      color: #1e3c72;
-    }
-
-    .importance-btn:hover, .importance-btn.active {
+    .category-btn:hover, .category-btn.active,
+    .importance-btn:hover, .importance-btn.active,
+    .understood-btn:hover, .understood-btn.active {
       background: rgba(255,255,255,0.9);
       color: #1e3c72;
     }
@@ -87,6 +84,16 @@
       color: white;
     }
 
+    .understood-btn[data-understood="checked"].active {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .understood-btn[data-understood="unchecked"].active {
+      background: #ff9800;
+      color: white;
+    }
+
     .progress {
       color: white;
       margin-bottom: 15px;
@@ -97,8 +104,8 @@
       perspective: 1000px;
       width: 100%;
       max-width: 420px;
-      height: 300px;
-      margin-bottom: 20px;
+      height: 320px;
+      margin-bottom: 15px;
     }
 
     .card {
@@ -194,17 +201,34 @@
       font-size: 14px;
     }
 
+    .check-status {
+      position: absolute;
+      bottom: 50px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #4CAF50;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .check-status.unchecked {
+      color: #999;
+    }
+
     .controls {
       display: flex;
-      gap: 15px;
-      margin-bottom: 20px;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .btn {
-      padding: 12px 30px;
+      padding: 12px 25px;
       border: none;
       border-radius: 30px;
-      font-size: 16px;
+      font-size: 15px;
       cursor: pointer;
       transition: all 0.3s;
       font-weight: bold;
@@ -229,6 +253,26 @@
       background: #ee5a5a;
     }
 
+    .btn-check {
+      background: #4CAF50;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-check:hover {
+      background: #45a049;
+    }
+
+    .btn-check.checked {
+      background: #ff9800;
+    }
+
+    .btn-check.checked:hover {
+      background: #f57c00;
+    }
+
     .btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
@@ -236,15 +280,45 @@
 
     .keyboard-hint {
       color: rgba(255,255,255,0.7);
-      font-size: 14px;
+      font-size: 13px;
       text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      max-width: 500px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      height: 24px;
+      margin-bottom: 15px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #4CAF50, #8BC34A);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    .progress-bar-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     }
 
     .word-list {
       background: rgba(255,255,255,0.1);
       border-radius: 15px;
       padding: 20px;
-      margin-top: 20px;
+      margin-top: 10px;
       width: 100%;
       max-width: 700px;
     }
@@ -257,7 +331,7 @@
 
     .word-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
       gap: 8px;
       max-height: 400px;
       overflow-y: auto;
@@ -265,22 +339,25 @@
 
     .word-item {
       background: rgba(255,255,255,0.9);
-      padding: 6px 10px;
+      padding: 8px 10px;
       border-radius: 8px;
-      text-align: center;
+      text-align: left;
       font-size: 13px;
       cursor: pointer;
       transition: all 0.3s;
       border-left: 4px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .word-item:hover {
       background: #ffd700;
-      transform: scale(1.05);
+      transform: scale(1.02);
     }
 
-    .word-item.learned {
-      background: #90EE90;
+    .word-item.checked {
+      background: #c8e6c9;
     }
 
     .word-item.high {
@@ -295,17 +372,74 @@
       border-left-color: #6bcb77;
     }
 
+    .word-item .check-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .word-item .word-text {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     .stats {
       color: white;
       text-align: center;
       margin-top: 10px;
       font-size: 14px;
     }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .btn-reset {
+      background: #f44336;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .btn-reset:hover {
+      background: #d32f2f;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
   <h1>🚤 ボートレース用語 単語帳</h1>
   
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="progress-bar-text" id="progressBarText">0%</div>
+  </div>
+
   <div class="filter-section">
     <span class="filter-label">📁 カテゴリ</span>
     <div class="category-selector">
@@ -328,6 +462,13 @@
       <button class="importance-btn" data-importance="medium">中（重要）</button>
       <button class="importance-btn" data-importance="low">低（応用）</button>
     </div>
+
+    <span class="filter-label">✅ 理解度</span>
+    <div class="understood-selector">
+      <button class="understood-btn active" data-understood="all">すべて</button>
+      <button class="understood-btn" data-understood="checked">理解済み</button>
+      <button class="understood-btn" data-understood="unchecked">未理解</button>
+    </div>
   </div>
 
   <div class="progress">
@@ -340,29 +481,41 @@
         <span class="category-tag" id="categoryTag">カテゴリ</span>
         <span class="importance-tag" id="importanceTag">重要度</span>
         <div class="term" id="term">用語</div>
+        <div class="check-status unchecked" id="checkStatusFront">
+          <span>☐</span> 未理解
+        </div>
         <span class="hint">クリックで意味を表示</span>
       </div>
       <div class="card-face card-back">
         <div class="definition" id="definition">意味</div>
+        <div class="check-status unchecked" id="checkStatusBack">
+          <span>☐</span> 未理解
+        </div>
       </div>
     </div>
   </div>
 
   <div class="controls">
-    <button class="btn btn-prev" id="prevBtn">◀ 前へ</button>
-    <button class="btn btn-shuffle" id="shuffleBtn">🔀 シャッフル</button>
-    <button class="btn btn-next" id="nextBtn">次へ ▶</button>
+    <button class="btn btn-prev" id="prevBtn">◀ 前</button>
+    <button class="btn btn-check" id="checkBtn">✓ 理解した</button>
+    <button class="btn btn-shuffle" id="shuffleBtn">🔀</button>
+    <button class="btn btn-next" id="nextBtn">次 ▶</button>
   </div>
 
   <div class="keyboard-hint">
-    キーボード: ← 前へ / → 次へ / Space めくる
+    ← → 移動 / Space めくる / Enter 理解チェック
   </div>
 
   <div class="word-list">
     <h3>📚 用語一覧（クリックでジャンプ）</h3>
     <div class="word-grid" id="wordGrid"></div>
     <div class="stats" id="stats"></div>
+    <div class="action-buttons">
+      <button class="btn-reset" id="resetBtn">🗑️ チェックをリセット</button>
+    </div>
   </div>
+
+  <div class="toast" id="toast"></div>
 
   <script>
     const words = [
@@ -746,42 +899,109 @@
       low: "応用"
     };
 
+    // Load checked words from localStorage
+    let checkedWords = new Set(JSON.parse(localStorage.getItem('boatrace-checked') || '[]'));
+
     let currentIndex = 0;
     let filteredWords = [...words];
-    let learnedWords = new Set();
     let currentCategory = "all";
     let currentImportance = "all";
+    let currentUnderstood = "all";
 
     const card = document.getElementById('card');
     const term = document.getElementById('term');
     const definition = document.getElementById('definition');
     const categoryTag = document.getElementById('categoryTag');
     const importanceTag = document.getElementById('importanceTag');
+    const checkStatusFront = document.getElementById('checkStatusFront');
+    const checkStatusBack = document.getElementById('checkStatusBack');
     const currentSpan = document.getElementById('current');
     const totalSpan = document.getElementById('total');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const shuffleBtn = document.getElementById('shuffleBtn');
+    const checkBtn = document.getElementById('checkBtn');
     const wordGrid = document.getElementById('wordGrid');
     const stats = document.getElementById('stats');
+    const progressBar = document.getElementById('progressBar');
+    const progressBarText = document.getElementById('progressBarText');
+    const resetBtn = document.getElementById('resetBtn');
+    const toast = document.getElementById('toast');
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    function saveCheckedWords() {
+      localStorage.setItem('boatrace-checked', JSON.stringify([...checkedWords]));
+    }
 
     function filterWords() {
       filteredWords = words.filter(w => {
         const categoryMatch = currentCategory === "all" || w.category === currentCategory;
         const importanceMatch = currentImportance === "all" || w.importance === currentImportance;
-        return categoryMatch && importanceMatch;
+        let understoodMatch = true;
+        if (currentUnderstood === "checked") {
+          understoodMatch = checkedWords.has(w.term);
+        } else if (currentUnderstood === "unchecked") {
+          understoodMatch = !checkedWords.has(w.term);
+        }
+        return categoryMatch && importanceMatch && understoodMatch;
       });
       currentIndex = 0;
       updateCard();
       renderWordList();
       updateStats();
+      updateProgressBar();
+    }
+
+    function updateProgressBar() {
+      const total = words.length;
+      const checked = checkedWords.size;
+      const percentage = Math.round((checked / total) * 100);
+      progressBar.style.width = percentage + '%';
+      progressBarText.textContent = `${checked} / ${total} (${percentage}%)`;
     }
 
     function updateStats() {
       const highCount = words.filter(w => w.importance === "high").length;
       const mediumCount = words.filter(w => w.importance === "medium").length;
       const lowCount = words.filter(w => w.importance === "low").length;
-      stats.innerHTML = `全${words.length}語 | 🔴必須: ${highCount} | 🟡重要: ${mediumCount} | 🟢応用: ${lowCount} | 学習済: ${learnedWords.size}`;
+      const highChecked = words.filter(w => w.importance === "high" && checkedWords.has(w.term)).length;
+      const mediumChecked = words.filter(w => w.importance === "medium" && checkedWords.has(w.term)).length;
+      const lowChecked = words.filter(w => w.importance === "low" && checkedWords.has(w.term)).length;
+      
+      stats.innerHTML = `
+        全${words.length}語 | 
+        🔴必須: ${highChecked}/${highCount} | 
+        🟡重要: ${mediumChecked}/${mediumCount} | 
+        🟢応用: ${lowChecked}/${lowCount}
+      `;
+    }
+
+    function updateCheckStatus() {
+      if (filteredWords.length === 0) return;
+      
+      const word = filteredWords[currentIndex];
+      const isChecked = checkedWords.has(word.term);
+      
+      if (isChecked) {
+        checkStatusFront.innerHTML = '<span>✓</span> 理解済み';
+        checkStatusFront.classList.remove('unchecked');
+        checkStatusBack.innerHTML = '<span>✓</span> 理解済み';
+        checkStatusBack.classList.remove('unchecked');
+        checkBtn.textContent = '✕ 取消';
+        checkBtn.classList.add('checked');
+      } else {
+        checkStatusFront.innerHTML = '<span>☐</span> 未理解';
+        checkStatusFront.classList.add('unchecked');
+        checkStatusBack.innerHTML = '<span>☐</span> 未理解';
+        checkStatusBack.classList.add('unchecked');
+        checkBtn.textContent = '✓ 理解した';
+        checkBtn.classList.remove('checked');
+      }
     }
 
     function updateCard() {
@@ -793,6 +1013,8 @@
         importanceTag.className = "importance-tag";
         currentSpan.textContent = 0;
         totalSpan.textContent = 0;
+        checkStatusFront.innerHTML = '';
+        checkStatusBack.innerHTML = '';
         return;
       }
       
@@ -809,14 +1031,20 @@
       
       prevBtn.disabled = currentIndex === 0;
       nextBtn.disabled = currentIndex === filteredWords.length - 1;
+      
+      updateCheckStatus();
     }
 
     function renderWordList() {
       wordGrid.innerHTML = '';
       filteredWords.forEach((word, index) => {
         const item = document.createElement('div');
-        item.className = `word-item ${word.importance}` + (learnedWords.has(word.term) ? ' learned' : '');
-        item.textContent = word.term;
+        const isChecked = checkedWords.has(word.term);
+        item.className = `word-item ${word.importance}` + (isChecked ? ' checked' : '');
+        item.innerHTML = `
+          <span class="check-icon">${isChecked ? '✓' : '☐'}</span>
+          <span class="word-text">${word.term}</span>
+        `;
         item.addEventListener('click', () => {
           currentIndex = index;
           updateCard();
@@ -824,6 +1052,24 @@
         });
         wordGrid.appendChild(item);
       });
+    }
+
+    function toggleCheck() {
+      if (filteredWords.length === 0) return;
+      
+      const word = filteredWords[currentIndex];
+      if (checkedWords.has(word.term)) {
+        checkedWords.delete(word.term);
+        showToast(`「${word.term}」のチェックを外しました`);
+      } else {
+        checkedWords.add(word.term);
+        showToast(`「${word.term}」を理解済みにしました！`);
+      }
+      saveCheckedWords();
+      updateCheckStatus();
+      renderWordList();
+      updateStats();
+      updateProgressBar();
     }
 
     function shuffle(array) {
@@ -837,11 +1083,6 @@
     // Event Listeners
     card.addEventListener('click', () => {
       card.classList.toggle('flipped');
-      if (card.classList.contains('flipped') && filteredWords.length > 0) {
-        learnedWords.add(filteredWords[currentIndex].term);
-        renderWordList();
-        updateStats();
-      }
     });
 
     prevBtn.addEventListener('click', () => {
@@ -865,6 +1106,17 @@
       renderWordList();
     });
 
+    checkBtn.addEventListener('click', toggleCheck);
+
+    resetBtn.addEventListener('click', () => {
+      if (confirm('全てのチェックをリセットしますか？')) {
+        checkedWords.clear();
+        saveCheckedWords();
+        filterWords();
+        showToast('チェックをリセットしました');
+      }
+    });
+
     document.querySelectorAll('.category-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
@@ -883,6 +1135,15 @@
       });
     });
 
+    document.querySelectorAll('.understood-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.understood-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentUnderstood = btn.dataset.understood;
+        filterWords();
+      });
+    });
+
     // Keyboard navigation
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowLeft' && currentIndex > 0) {
@@ -894,11 +1155,9 @@
       } else if (e.key === ' ') {
         e.preventDefault();
         card.classList.toggle('flipped');
-        if (card.classList.contains('flipped') && filteredWords.length > 0) {
-          learnedWords.add(filteredWords[currentIndex].term);
-          renderWordList();
-          updateStats();
-        }
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        toggleCheck();
       }
     });
 
@@ -906,6 +1165,7 @@
     updateCard();
     renderWordList();
     updateStats();
+    updateProgressBar();
   </script>
 </body>
 </html>
